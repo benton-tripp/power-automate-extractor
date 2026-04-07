@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Power Automate Flow Extractor",
+  "name": "Power Automate Extractor",
   "version": "1.0.0",
   "description": "Capture Power Automate flow definitions from network traffic. Download JSON or generate AI summaries.",
   "permissions": [
