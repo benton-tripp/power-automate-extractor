@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Power Automate Flow Extractor",
   "version": "1.0.0",
-  "description": "Automatically captures Power Automate flow definitions from network traffic as you browse — no HAR exports or DevTools needed. Download or copy full flow JSON with one click. Includes optional AI-powered summaries (OpenAI / Anthropic) that break down triggers, actions, connections, and error handling into readable documentation. Works with powerautomate.com and powerautomate.us (GCC).",
+  "description": "Capture Power Automate flow definitions from network traffic. Download JSON or generate AI summaries.",
   "permissions": [
     "storage",
     "activeTab"
