@@ -196,3 +196,27 @@ footer {
   align-items: center;
   border-top: 1px solid #e8e8e8;
 }
+
+.footer-left {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-coffee {
+  background: #ffdd00;
+  border-color: #e6c700;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.btn-coffee:hover {
+  background: #ffd000;
+}
+
+.paywall-message {
+  text-align: center;
+  padding: 8px 0;
+  color: #555;
+  font-size: 12px;
+  line-height: 1.5;
+}

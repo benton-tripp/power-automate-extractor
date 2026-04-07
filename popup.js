@@ -8,14 +8,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const emptyState = document.getElementById('empty-state');
   const clearBtn = document.getElementById('clear-btn');
   const settingsBtn = document.getElementById('settings-btn');
+  const coffeeBtn = document.getElementById('coffee-btn');
+
+  let isPaid = false;
 
   // Clear badge when popup opens
   chrome.action.setBadgeText({ text: '' });
 
-  loadFlows();
+  // Check payment status then load flows
+  chrome.runtime.sendMessage({ action: 'getPaidStatus' }).then((resp) => {
+    isPaid = resp?.paid || false;
+    loadFlows();
+  }).catch(() => {
+    loadFlows();
+  });
 
   settingsBtn.addEventListener('click', () => {
     chrome.runtime.openOptionsPage();
+  });
+
+  coffeeBtn.addEventListener('click', () => {
+    chrome.tabs.create({ url: 'https://buymeacoffee.com/PLACEHOLDER' });
   });
 
   clearBtn.addEventListener('click', async () => {
@@ -91,6 +104,23 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = e.target;
       const panel = li.querySelector('.summary-panel');
       const content = li.querySelector('.summary-content');
+
+      // Check if user has paid for AI features
+      if (!isPaid) {
+        panel.hidden = false;
+        content.innerHTML = `
+          <div class="paywall-message">
+            <strong>AI Summaries — Premium Feature</strong><br>
+            Unlock AI-powered flow summaries with a one-time purchase.
+            <br><br>
+            <button class="btn btn-primary" data-action="unlock">Unlock for $4.99</button>
+          </div>
+        `;
+        panel.querySelector('[data-action="unlock"]').addEventListener('click', () => {
+          chrome.runtime.sendMessage({ action: 'openPaymentPage' });
+        });
+        return;
+      }
 
       btn.disabled = true;
       btn.textContent = 'Generating…';

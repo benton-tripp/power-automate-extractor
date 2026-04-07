@@ -4,8 +4,11 @@
  */
 
 import { generateFlowSummary } from './ai-summary.js';
+import ExtPay from './ExtPay.js';
 
 const STORAGE_KEY = 'capturedFlows';
+const extpay = ExtPay('power-automate-flow-extractor');
+extpay.startBackground();
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'flowCaptured') {
@@ -38,6 +41,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .then((summary) => sendResponse({ ok: true, summary }))
       .catch((err) => sendResponse({ ok: false, error: err.message }));
     return true;
+  }
+
+  if (message.action === 'getPaidStatus') {
+    extpay.getUser().then((user) => sendResponse({ paid: user.paid }))
+      .catch(() => sendResponse({ paid: false }));
+    return true;
+  }
+
+  if (message.action === 'openPaymentPage') {
+    extpay.openPaymentPage();
+    sendResponse({ ok: true });
   }
 });
 
