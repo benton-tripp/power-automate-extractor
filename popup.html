@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h1>Flow Extractor</h1>
+    <p class="subtitle">Captured Power Automate flows</p>
+  </header>
+  <main>
+    <div id="empty-state" class="empty" hidden>
+      <p>No flows captured yet.</p>
+      <p class="hint">Navigate to a flow in Power Automate to capture its definition.</p>
+    </div>
+    <ul id="flow-list"></ul>
+  </main>
+  <footer>
+    <button id="clear-btn" class="btn-danger" title="Clear all captured flows">Clear All</button>
+  </footer>
+  <script src="popup.js"></script>
+</body>
+</html>
