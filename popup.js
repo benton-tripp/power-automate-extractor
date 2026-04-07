@@ -113,6 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
             <strong>AI Summaries — Premium Feature</strong><br>
             Unlock AI-powered flow summaries with a one-time purchase.
             <br><br>
+            <span class="paywall-note">Note: AI summaries require your own OpenAI or Anthropic API key.
+            API usage costs are billed directly to your account by the provider.</span>
+            <br><br>
             <button class="btn btn-primary" data-action="unlock">Unlock for $4.99</button>
           </div>
         `;
