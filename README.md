@@ -1,4 +1,4 @@
-# Power Automate Flow Extractor
+# Power Automate Extractor
 
 A Chrome/Edge extension that captures Power Automate flow definitions directly from network traffic — no HAR export or DevTools workflow needed. Includes optional AI-powered flow summaries via OpenAI or Anthropic.
 
