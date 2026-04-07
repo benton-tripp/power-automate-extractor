@@ -1,21 +1,25 @@
 # Power Automate Flow Extractor
 
-A Chrome/Edge extension that captures Power Automate flow definitions directly from network traffic — no HAR export or DevTools workflow needed.
+A Chrome/Edge extension that captures Power Automate flow definitions directly from network traffic — no HAR export or DevTools workflow needed. Includes optional AI-powered flow summaries via OpenAI or Anthropic.
+
+## Features
+
+- **Automatic Capture** — Intercepts flow definitions from `fetch` and `XMLHttpRequest` as you browse Power Automate
+- **One-Click Export** — Download full flow JSON or copy to clipboard
+- **AI Summaries** — Generate structured documentation from flow definitions using OpenAI (GPT-4o, GPT-4.1) or Anthropic (Claude Haiku 4.5, Sonnet 4.6, Opus 4.6)
+- **Persistent Summaries** — Summaries are saved and restored when you reopen the popup
+- **GCC Support** — Works with both `powerautomate.com` and `powerautomate.us`
 
 ## How It Works
-
-1. A content script patches `window.fetch()` and `XMLHttpRequest` on Power Automate pages
-2. API responses containing flow definitions are detected and captured automatically
-3. Captured flows appear in the extension popup, ready to download or copy
 
 ```
 interceptor.js  (MAIN world)  — patches fetch + XHR, posts captured flows via postMessage
        ↓
 bridge.js       (ISOLATED world) — relays messages to the extension runtime
        ↓
-background.js   (Service Worker) — stores flows in chrome.storage.local
+background.js   (Service Worker) — stores flows, generates AI summaries
        ↓
-popup.html/js   (Popup UI) — lists captured flows, download/copy/delete
+popup.html/js   (Popup UI) — lists captured flows with download/copy/summarize/delete
 ```
 
 ## Installation (Developer Mode)
@@ -34,20 +38,20 @@ popup.html/js   (Popup UI) — lists captured flows, download/copy/delete
 4. For each captured flow you can:
    - **Download JSON** — saves the full flow definition as a `.json` file
    - **Copy to Clipboard** — copies the formatted JSON
+   - **Summarize** — generates an AI-powered breakdown of the flow (requires API key)
    - **Delete** — removes from the captured list
 
-## Placeholder Icons
+## AI Summary Setup
 
-The `icons/` directory needs 16×16, 48×48, and 128×128 PNG icons. You can generate simple placeholders:
+1. Click **Settings** in the popup footer
+2. Choose a provider (OpenAI or Anthropic)
+3. Select a model
+4. Enter your API key
+5. Click **Save**
 
-```powershell
-# Quick SVG → PNG via browser, or just drop any PNGs named:
-#   icons/icon16.png
-#   icons/icon48.png
-#   icons/icon128.png
-```
+Summaries include: overview, trigger details, step-by-step actions, connections used, and error handling notes.
 
-The extension works without icons — Chrome/Edge will show a default puzzle piece.
+> **Note:** AI summaries require your own API key. API usage costs are billed directly by OpenAI or Anthropic.
 
 ## Project Structure
 
@@ -56,22 +60,29 @@ power-automate-extractor/
 ├── manifest.json       MV3 extension manifest
 ├── interceptor.js      Fetch + XHR interceptor (MAIN world content script)
 ├── bridge.js           Message bridge (ISOLATED world content script)
-├── background.js       Service worker — stores captured flows
+├── background.js       Service worker — stores flows, handles AI summaries
+├── ai-summary.js       AI API integration (OpenAI + Anthropic)
 ├── popup.html          Extension popup markup
 ├── popup.css           Popup styles
-├── popup.js            Popup logic — list, download, copy, delete
+├── popup.js            Popup logic — list, download, copy, summarize, delete
+├── options.html        AI settings page
+├── options.css         Settings styles
+├── options.js          Settings logic (provider, model, API key)
+├── ExtPay.js           ExtensionPay payment library
 ├── icons/              Extension icons (16/48/128 PNG)
+├── privacy-policy.md   Privacy policy
 ├── .gitignore
 └── README.md
 ```
 
-## Future Ideas
+## Privacy
 
-- [ ] AI-powered flow summaries (OpenAI / Anthropic API)
-- [ ] Auto-generate markdown documentation from flow definitions
-- [ ] Flow diff — compare two captured versions
-- [ ] Export as Power Automate-compatible package
-- [ ] Options page for API key configuration
+See [Privacy Policy](privacy-policy.md).
+
+This extension:
+- Only activates on Power Automate domains (`*.powerautomate.com`, `*.powerautomate.us`)
+- Stores captured flow data locally in your browser (`chrome.storage.local`)
+- AI summary API calls are made directly from your browser to OpenAI/Anthropic using your own API key — no data passes through third-party servers
 
 ## Compatibility
 
