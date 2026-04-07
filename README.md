@@ -84,6 +84,17 @@ This extension:
 - Stores captured flow data locally in your browser (`chrome.storage.local`)
 - AI summary API calls are made directly from your browser to OpenAI/Anthropic using your own API key — no data passes through third-party servers
 
+## Screenshots
+
+![Empty state](images/screenshot-1.png)
+The popup's empty state with instructions on how to start capturing flows.
+
+![Settings](images/screenshot-2.png)
+Settings page where you configure your AI provider, model, and API key.
+
+![Captured flow](images/screenshot-3.png)
+A captured flow with options to download JSON, copy to clipboard, generate an AI summary, or delete.
+
 ## Compatibility
 
 - **Chrome** 109+ (MV3, `world: "MAIN"` support)
