@@ -90,7 +90,7 @@ async function callAnthropic(apiKey, model, userMessage) {
       'anthropic-dangerous-direct-browser-access': 'true'
     },
     body: JSON.stringify({
-      model: model || 'claude-haiku-4-20250414',
+      model: model || 'claude-haiku-4-5',
       max_tokens: 2048,
       system: SYSTEM_PROMPT,
       messages: [

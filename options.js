@@ -10,8 +10,9 @@ const MODELS = {
     { id: 'gpt-4.1-nano', label: 'GPT-4.1 Nano (fastest)' }
   ],
   anthropic: [
-    { id: 'claude-sonnet-4-20250514', label: 'Claude Sonnet 4 (best quality)' },
-    { id: 'claude-haiku-4-20250414', label: 'Claude Haiku 4 (fast, cheap)', default: true }
+    { id: 'claude-haiku-4-5', label: 'Claude Haiku 4.5 (fastest, cheapest)', default: true },
+    { id: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6 (fast + smart)' },
+    { id: 'claude-opus-4-6', label: 'Claude Opus 4.6 (most intelligent)' }
   ]
 };
 
