@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   coffeeBtn.addEventListener('click', () => {
-    chrome.tabs.create({ url: 'https://buymeacoffee.com/PLACEHOLDER' });
+    chrome.tabs.create({ url: 'https://buymeacoffee.com/bentontripp' });
   });
 
   clearBtn.addEventListener('click', async () => {
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="flow-meta">
         ID: ${escapeHtml(flow.id)}<br>
         Captured: ${timeStr}
-        ${flow.state ? `· State: ${escapeHtml(flow.state)}` : ''}
+        ${flow.state ? `· State: ${escapeHtml(friendlyState(flow.state))}` : ''}
       </div>
       <div class="flow-actions">
         <button class="btn btn-primary" data-action="download">Download JSON</button>
@@ -191,6 +191,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+  }
+
+  function friendlyState(state) {
+    const map = { Started: 'On', Stopped: 'Off', Suspended: 'Suspended' };
+    return map[state] || state;
   }
 
   /** Minimal markdown → HTML (bold, headings, lists, line breaks) */
