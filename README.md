@@ -4,12 +4,12 @@ A Chrome/Edge extension that captures Power Automate flow definitions directly f
 
 ## How It Works
 
-1. A content script patches `window.fetch()` on Power Automate pages
+1. A content script patches `window.fetch()` and `XMLHttpRequest` on Power Automate pages
 2. API responses containing flow definitions are detected and captured automatically
 3. Captured flows appear in the extension popup, ready to download or copy
 
 ```
-interceptor.js  (MAIN world)  — patches fetch, posts captured flows via postMessage
+interceptor.js  (MAIN world)  — patches fetch + XHR, posts captured flows via postMessage
        ↓
 bridge.js       (ISOLATED world) — relays messages to the extension runtime
        ↓
@@ -54,7 +54,7 @@ The extension works without icons — Chrome/Edge will show a default puzzle pie
 ```
 power-automate-extractor/
 ├── manifest.json       MV3 extension manifest
-├── interceptor.js      Fetch interceptor (MAIN world content script)
+├── interceptor.js      Fetch + XHR interceptor (MAIN world content script)
 ├── bridge.js           Message bridge (ISOLATED world content script)
 ├── background.js       Service worker — stores captured flows
 ├── popup.html          Extension popup markup
