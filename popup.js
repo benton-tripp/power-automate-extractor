@@ -77,16 +77,16 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="flow-actions">
         <button class="btn btn-primary" data-action="download">Download JSON</button>
         <button class="btn" data-action="copy">Copy to Clipboard</button>
-        <button class="btn btn-ai" data-action="summarize">Summarize</button>
+        <button class="btn btn-ai" data-action="summarize">${flow.summary ? 'Re-summarize' : 'Summarize'}</button>
         <button class="btn" data-action="delete">Delete</button>
       </div>
-      <div class="summary-panel" hidden>
+      <div class="summary-panel" ${flow.summary ? '' : 'hidden'}>
         <div class="summary-header">
           <strong>AI Summary</strong>
           <button class="btn-small" data-action="copy-summary">Copy</button>
           <button class="btn-small" data-action="download-summary">Download</button>
         </div>
-        <div class="summary-content"></div>
+        <div class="summary-content">${flow.summary ? markdownToHtml(flow.summary) : ''}</div>
       </div>
     `;
 

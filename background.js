@@ -80,7 +80,12 @@ async function handleSummarize(flowId) {
   const flows = await getFlows();
   const flow = flows[flowId];
   if (!flow) throw new Error('Flow not found');
-  return generateFlowSummary(flow.raw);
+  const summary = await generateFlowSummary(flow.raw);
+  // Persist summary alongside the flow
+  flow.summary = summary;
+  flow.summarizedAt = new Date().toISOString();
+  await chrome.storage.local.set({ [STORAGE_KEY]: flows });
+  return summary;
 }
 
 // Clear badge when popup opens
