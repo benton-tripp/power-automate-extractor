@@ -1,14 +1,15 @@
 /**
- * background.js — MV3 Service Worker.
- * Stores captured flows and serves them to the popup.
+ * background.js — MV3 Service Worker (ES module).
+ * Stores captured flows, serves them to the popup, and handles AI summaries.
  */
+
+import { generateFlowSummary } from './ai-summary.js';
 
 const STORAGE_KEY = 'capturedFlows';
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'flowCaptured') {
     handleFlowCaptured(message.flow);
-    // Update badge to signal new capture
     chrome.action.setBadgeText({ text: '!' });
     chrome.action.setBadgeBackgroundColor({ color: '#0078d4' });
     sendResponse({ ok: true });
@@ -16,7 +17,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   if (message.action === 'getFlows') {
     getFlows().then((flows) => sendResponse(flows));
-    return true; // Keep channel open for async response
+    return true;
   }
 
   if (message.action === 'clearFlows') {
@@ -29,6 +30,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   if (message.action === 'deleteFlow') {
     deleteFlow(message.flowId).then(() => sendResponse({ ok: true }));
+    return true;
+  }
+
+  if (message.action === 'summarizeFlow') {
+    handleSummarize(message.flowId)
+      .then((summary) => sendResponse({ ok: true, summary }))
+      .catch((err) => sendResponse({ ok: false, error: err.message }));
     return true;
   }
 });
@@ -52,6 +60,13 @@ async function deleteFlow(flowId) {
   if (Object.keys(flows).length === 0) {
     chrome.action.setBadgeText({ text: '' });
   }
+}
+
+async function handleSummarize(flowId) {
+  const flows = await getFlows();
+  const flow = flows[flowId];
+  if (!flow) throw new Error('Flow not found');
+  return generateFlowSummary(flow.raw);
 }
 
 // Clear badge when popup opens

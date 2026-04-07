@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flow Extractor Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Flow Extractor Settings</h1>
+    <p class="description">Configure your AI provider to generate flow summaries. Your API key is stored locally in your browser.</p>
+
+    <form id="settings-form">
+      <div class="field">
+        <label for="provider">AI Provider</label>
+        <select id="provider">
+          <option value="openai">OpenAI</option>
+          <option value="anthropic">Anthropic</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="model">Model</label>
+        <select id="model"></select>
+        <p class="field-hint" id="model-hint"></p>
+      </div>
+
+      <div class="field">
+        <label for="api-key">API Key</label>
+        <div class="key-row">
+          <input type="password" id="api-key" placeholder="sk-..." autocomplete="off">
+          <button type="button" id="toggle-key" class="btn-small" title="Show/hide key">Show</button>
+        </div>
+        <p class="field-hint" id="key-hint"></p>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn-primary">Save</button>
+        <span id="status" class="status" hidden></span>
+      </div>
+    </form>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>

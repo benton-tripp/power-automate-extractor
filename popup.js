@@ -7,11 +7,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const flowList = document.getElementById('flow-list');
   const emptyState = document.getElementById('empty-state');
   const clearBtn = document.getElementById('clear-btn');
+  const settingsBtn = document.getElementById('settings-btn');
 
   // Clear badge when popup opens
   chrome.action.setBadgeText({ text: '' });
 
   loadFlows();
+
+  settingsBtn.addEventListener('click', () => {
+    chrome.runtime.openOptionsPage();
+  });
 
   clearBtn.addEventListener('click', async () => {
     if (!confirm('Clear all captured flows?')) return;
@@ -59,7 +64,16 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="flow-actions">
         <button class="btn btn-primary" data-action="download">Download JSON</button>
         <button class="btn" data-action="copy">Copy to Clipboard</button>
+        <button class="btn btn-ai" data-action="summarize">Summarize</button>
         <button class="btn" data-action="delete">Delete</button>
+      </div>
+      <div class="summary-panel" hidden>
+        <div class="summary-header">
+          <strong>AI Summary</strong>
+          <button class="btn-small" data-action="copy-summary">Copy</button>
+          <button class="btn-small" data-action="download-summary">Download</button>
+        </div>
+        <div class="summary-content"></div>
       </div>
     `;
 
@@ -71,6 +85,51 @@ document.addEventListener('DOMContentLoaded', () => {
       await copyFlow(flow);
       e.target.textContent = 'Copied!';
       setTimeout(() => { e.target.textContent = 'Copy to Clipboard'; }, 1500);
+    });
+
+    li.querySelector('[data-action="summarize"]').addEventListener('click', async (e) => {
+      const btn = e.target;
+      const panel = li.querySelector('.summary-panel');
+      const content = li.querySelector('.summary-content');
+
+      btn.disabled = true;
+      btn.textContent = 'Generating…';
+      content.textContent = '';
+      panel.hidden = false;
+
+      try {
+        const resp = await chrome.runtime.sendMessage({ action: 'summarizeFlow', flowId: flow.id });
+        if (resp.ok) {
+          content.innerHTML = markdownToHtml(resp.summary);
+          btn.textContent = 'Re-summarize';
+        } else {
+          content.textContent = resp.error || 'Summary generation failed.';
+          btn.textContent = 'Summarize';
+        }
+      } catch (err) {
+        content.textContent = err.message;
+        btn.textContent = 'Summarize';
+      }
+      btn.disabled = false;
+    });
+
+    li.querySelector('[data-action="copy-summary"]').addEventListener('click', async (e) => {
+      const text = li.querySelector('.summary-content').innerText;
+      await navigator.clipboard.writeText(text);
+      e.target.textContent = 'Copied!';
+      setTimeout(() => { e.target.textContent = 'Copy'; }, 1500);
+    });
+
+    li.querySelector('[data-action="download-summary"]').addEventListener('click', () => {
+      const text = li.querySelector('.summary-content').innerText;
+      const safeName = flow.displayName.replace(/[^a-zA-Z0-9-_ ]/g, '').trim();
+      const blob = new Blob([text], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${safeName} - Summary.md`;
+      a.click();
+      URL.revokeObjectURL(url);
     });
 
     li.querySelector('[data-action="delete"]').addEventListener('click', async () => {
@@ -102,5 +161,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+  }
+
+  /** Minimal markdown → HTML (bold, headings, lists, line breaks) */
+  function markdownToHtml(md) {
+    return escapeHtml(md)
+      .replace(/^### (.+)$/gm, '<h4>$1</h4>')
+      .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^# (.+)$/gm, '<h3>$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>')
+      .replace(/^[-•]\s+(.+)$/gm, '<li>$1</li>')
+      .replace(/\n/g, '<br>');
   }
 });

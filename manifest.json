@@ -9,10 +9,13 @@
   ],
   "host_permissions": [
     "https://*.powerautomate.us/*",
-    "https://*.powerautomate.com/*"
+    "https://*.powerautomate.com/*",
+    "https://api.openai.com/*",
+    "https://api.anthropic.com/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "content_scripts": [
     {
@@ -47,5 +50,9 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
   }
 }
