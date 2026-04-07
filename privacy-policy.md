@@ -1,3 +1,8 @@
+---
+layout: default
+title: Privacy Policy — Power Automate Flow Extractor
+---
+
 # Privacy Policy — Power Automate Flow Extractor
 
 **Last updated:** April 7, 2026
