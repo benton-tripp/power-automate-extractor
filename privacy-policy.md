@@ -1,6 +1,6 @@
 ---
-layout: default
 title: Privacy Policy — Power Automate Flow Extractor
+permalink: /privacy-policy
 ---
 
 # Privacy Policy — Power Automate Flow Extractor

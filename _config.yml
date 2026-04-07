@@ -1,0 +1,11 @@
+title: Power Automate Flow Extractor
+exclude:
+  - "*.js"
+  - "*.css"
+  - "*.json"
+  - icons
+  - images
+  - "*.py"
+  - "*.env"
+  - LICENSE
+  - README.md
